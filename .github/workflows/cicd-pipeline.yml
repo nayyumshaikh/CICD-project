@@ -30,9 +30,3 @@ jobs:
       run: |
         docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gcp-app:latest ./app
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gcp-app:latest
-
-    - name: Deploy to GKE
-      run: |
-        gcloud container clusters get-credentials <CLUSTER-NAME> --region <REGION>
-        kubectl apply -f k8s/deployment.yaml
-        kubectl apply -f k8s/service.yaml
