@@ -1,16 +1,16 @@
-name: CI/CD Pipeline with Tests and Deployment
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - test_main
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Authenticate with Google Cloud
@@ -23,30 +23,10 @@ jobs:
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-    - name: Install gke-gcloud-auth-plugin
-      run: |
-        gcloud components install gke-gcloud-auth-plugin --quiet
-
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r app/requirements.txt
-
-    - name: Run Tests
-      run: |
-        python -m unittest discover app
+    - name: Authenticate Docker
+      run: gcloud auth configure-docker
 
     - name: Build and Push Docker Image
       run: |
-        docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gcr/gcp-app:latest ./app
-        docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gcr/gcp-app:latest
-
-    - name: Get GKE Credentials
-      run: |
-        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }}
-
-    - name: Deploy to GKE
-      run: |
-        kubectl apply -f k8s/deployment.yaml
-        kubectl apply -f k8s/service.yaml
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gcp-app:latest ./app
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gcp-app:latest
