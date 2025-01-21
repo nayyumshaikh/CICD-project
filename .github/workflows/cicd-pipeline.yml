@@ -3,7 +3,7 @@ name: CI/CD Pipeline with Tests and Deployment
 on:
   push:
     branches:
-      - main
+      - test_main
 
 jobs:
   build-and-deploy:
