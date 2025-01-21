@@ -1,10 +1,11 @@
-from flask import Flask
+import unittest
+from main import add  # Import the function to test
 
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Hello, GCP CI/CD!"
+class TestApp(unittest.TestCase):
+    def test_add(self):
+        self.assertEqual(add(2, 3), 5)
+        self.assertEqual(add(-1, 1), 0)
+        self.assertEqual(add(0, 0), 0)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    unittest.main()
