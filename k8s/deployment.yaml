@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gcp-app
+  name: flask-app
   labels:
-    app: gcp-app
+    app: flask-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: gcp-app
+      app: flask-app
   template:
     metadata:
       labels:
-        app: gcp-app
+        app: flask-app
     spec:
       containers:
-      - name: gcp-app
-        image: gcr.io/<PROJECT-ID>/gcp-app:latest
+      - name: flask-app
+        image: gcr.io/YOUR_GCP_PROJECT_ID/flask-app:latest
         ports:
         - containerPort: 8080
